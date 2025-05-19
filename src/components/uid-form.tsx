@@ -12,6 +12,7 @@ export const UidForm = () => {
 
   const handleSelectUid = async (_uid: string) => {
     const { token } = await mutateAsync(_uid)
+
     if (token) {
       const newUids = new Set(cacheUids!)
       newUids.add(_uid)
@@ -21,24 +22,24 @@ export const UidForm = () => {
   }
 
   return (
-    <div className="w-full">
+    <div className="w-full text-xs">
       <div className="flex gap-2 mb-4">
         <input
           ref={inputRef}
           type="text"
           placeholder="请输入uid"
-          className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="flex-1 px-3 text-xs py-2 border border-neutral-50 rounded-md"
         />
         <button
           onClick={() => handleSelectUid(inputRef.current!.value)}
-          className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="px-4 py-2 bg-blue-50 text-white rounded-md"
         >
           提交
         </button>
       </div>
       {cacheUids!.length > 0 && (
         <div className="mt-4">
-          <h4 className="text-lg font-medium mb-2">已保存的UID列表:</h4>
+          <h4 className="font-medium mb-2">已保存的UID列表:</h4>
           <ul className="space-y-2">
             {cacheUids!.map((_uid, index) => (
               <div
@@ -52,12 +53,7 @@ export const UidForm = () => {
                   <InfoItem uid={_uid} />
                 </div>
 
-                <div className="relative group/info">
-                  <div>...</div>
-                  <div className="fixed top-0 right-0 min-w-48 h-full hidden group-hover/info:block bg-slate-200 z-10">
-                    <Operations uid={_uid} />
-                  </div>
-                </div>
+                <Operations uid={_uid} />
 
                 <button
                   onClick={(e) => {

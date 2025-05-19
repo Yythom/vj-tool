@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import {
   deleteCases,
   deleteFoto,
@@ -7,6 +7,8 @@ import {
   deleteStudio,
   adminLogin,
 } from '../services/api'
+import Cookies from 'js-cookie'
+import { useClickAway } from 'react-use'
 
 // 查看用户主页按钮组件
 const ViewProfileButton = ({ uid }: { uid: string }) => {
@@ -30,23 +32,31 @@ const AdminAccessButton = ({ uid }: { uid: string }) => {
   const handleAdminAccess = async () => {
     const url = `https://admin.vjshi.cn/#/users/list?page=1&size=10&uid=${uid}`
     const { token } = await adminLogin()
-    chrome.cookies.set(
-      {
-        url: 'https://admin.vjshi.cn',
-        name: 'TOKEN',
-        value: token,
+    if (chrome?.cookies) {
+      chrome.cookies.set(
+        {
+          url: 'https://admin.vjshi.cn',
+          name: 'TOKEN',
+          value: token,
+          domain: 'admin.vjshi.cn',
+          path: '/',
+        },
+        () => {
+          window.open(url, 'adminWindow', 'width=1920,height=1080,popup')
+        },
+      )
+    } else {
+      Cookies.set('TOKEN', token, {
         domain: 'admin.vjshi.cn',
         path: '/',
-      },
-      () => {
-        window.open(url, 'adminWindow', 'width=1920,height=1080,popup')
-      },
-    )
+      })
+      window.open(url, 'adminWindow', 'width=1920,height=1080,popup')
+    }
   }
 
   return (
     <button
-      className="w-full px-3 py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-500"
+      className="w-full px-3 py-2 bg-blue-50 text-white rounded-md"
       onClick={handleAdminAccess}
     >
       管理-用户列表
@@ -100,7 +110,7 @@ const DeleteWorksForm = ({ uid }: { uid: string }) => {
       </select>
       <button
         type="submit"
-        className="px-2 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="px-2 py-1 bg-blue-50 text-white rounded-md"
       >
         删除作品
       </button>
@@ -110,13 +120,35 @@ const DeleteWorksForm = ({ uid }: { uid: string }) => {
 
 // 主操作组件
 export const Operations = ({ uid }: { uid: string }) => {
+  const [open, setOpen] = useState(false)
+  const divRef = useRef<any>(null)
+
   return (
-    <div>
-      <div className="p-4 flex flex-col space-y-3">
-        <ViewProfileButton uid={uid} />
-        <AdminAccessButton uid={uid} />
+    <div className="relative">
+      <div
+        onClick={() => {
+          setOpen(!open)
+        }}
+      >
+        ...
       </div>
-      <DeleteWorksForm uid={uid} />
+      {open && (
+        <div
+          ref={divRef}
+          className="fixed top-0 right-0 min-w-48 h-full bg-neutral-50 z-10"
+        >
+          <div className="p-4 flex justify-end text-3xl">
+            <button onClick={() => setOpen(false)}>x</button>
+          </div>
+          <div>
+            <div className="p-4 flex flex-col space-y-3">
+              <ViewProfileButton uid={uid} />
+              <AdminAccessButton uid={uid} />
+            </div>
+            <DeleteWorksForm uid={uid} />
+          </div>
+        </div>
+      )}
     </div>
   )
 }

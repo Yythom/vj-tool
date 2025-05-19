@@ -2,16 +2,26 @@ export interface Version {
   name: string
   selected: boolean
 }
+const baseUrl = 'http://localhost:3002'
 
 export async function fetchVersions(): Promise<Version[]> {
   try {
-    const tabs = await new Promise<any>((resolve) => {
-      chrome.tabs.query({ active: true, currentWindow: true }, resolve)
-    })
-    const currentTabUrl = tabs[0].url
-    const includeVjshi = ['.vjshi.cn', '.vjshi.net']
+    let currentTabUrl = ''
+    if (chrome?.tabs) {
+      const tabs = await new Promise<any>((resolve) => {
+        chrome.tabs.query({ active: true, currentWindow: true }, resolve)
+      })
+      currentTabUrl = tabs[0].url
+    } else {
+      currentTabUrl = document.location.href
+    }
+    console.log(currentTabUrl)
+
+    const includeVjshi = ['.vjshi.cn', '.vjshi.net', 'localhost', '192.']
     if (includeVjshi.some((item) => currentTabUrl.includes(item))) {
-      const response = await fetch('https://www.vjshi.cn/')
+      const response = await fetch(
+        chrome?.tabs ? 'https://www.vjshi.cn/' : location.origin,
+      )
       const html = await response.text()
       const parser = new DOMParser()
       const doc = parser.parseFromString(html, 'text/html')
@@ -32,23 +42,18 @@ export async function fetchVersions(): Promise<Version[]> {
 }
 
 export const fetchUser = async (uid: string) => {
-  const response = await fetch(
-    `http://alb-qtjrjlj7p6s63het87.cn-shanghai.alb.aliyuncs.com/vjg/mgmt/user/login?uid=${uid}`,
-  )
+  const response = await fetch(`${baseUrl}/vjg/mgmt/user/login?uid=${uid}`)
   const data = await response.json()
   return data.data
 }
 
 export const deleteFoto = async (uid: any, pinCode: any = 107801) => {
   const { token } = await fetchUser(uid)
-  const response = await fetch(
-    'http://alb-qtjrjlj7p6s63het87.cn-shanghai.alb.aliyuncs.com/vjf/foto/list',
-    {
-      headers: {
-        Authorization: token,
-      },
+  const response = await fetch(`${baseUrl}/vjf/foto/list`, {
+    headers: {
+      Authorization: token,
     },
-  )
+  })
   const responseData = await response.json()
   const list = responseData?.data?.data
 
@@ -56,7 +61,7 @@ export const deleteFoto = async (uid: any, pinCode: any = 107801) => {
     list.map((item: any) => {
       const { fid } = item
       const options = {
-        url: `http://alb-qtjrjlj7p6s63het87.cn-shanghai.alb.aliyuncs.com/vjf/foto/del-by-id?fid=${fid}&pinCode=${pinCode}`,
+        url: `${baseUrl}/vjf/foto/del-by-id?fid=${fid}&pinCode=${pinCode}`,
         method: 'DELETE',
         headers: {
           Authorization: token,
@@ -69,14 +74,11 @@ export const deleteFoto = async (uid: any, pinCode: any = 107801) => {
 
 export const deleteMusic = async (uid: any, pinCode: any = 107801) => {
   const { token } = await fetchUser(uid)
-  const response = await fetch(
-    'http://alb-qtjrjlj7p6s63het87.cn-shanghai.alb.aliyuncs.com/vjm/music/seller/list-new',
-    {
-      headers: {
-        Authorization: token,
-      },
+  const response = await fetch(`${baseUrl}/vjm/music/seller/list-new`, {
+    headers: {
+      Authorization: token,
     },
-  )
+  })
   const responseData = await response.json()
   const list = responseData?.data?.data
 
@@ -84,7 +86,7 @@ export const deleteMusic = async (uid: any, pinCode: any = 107801) => {
     list.map((item: any) => {
       const { id } = item
       const options = {
-        url: `http://alb-qtjrjlj7p6s63het87.cn-shanghai.alb.aliyuncs.com/vjm/music/seller/delete-new?id=${id}&pinCode=${pinCode}`,
+        url: `${baseUrl}/vjm/music/seller/delete-new?id=${id}&pinCode=${pinCode}`,
         method: 'DELETE',
         headers: {
           Authorization: token,
@@ -97,14 +99,11 @@ export const deleteMusic = async (uid: any, pinCode: any = 107801) => {
 
 export const deleteVideo = async (uid: any, pinCode: any = 107801) => {
   const { token } = await fetchUser(uid)
-  const response = await fetch(
-    'http://alb-qtjrjlj7p6s63het87.cn-shanghai.alb.aliyuncs.com/vjh/video/list',
-    {
-      headers: {
-        Authorization: token,
-      },
+  const response = await fetch(`${baseUrl}/vjh/video/list`, {
+    headers: {
+      Authorization: token,
     },
-  )
+  })
   const responseData = await response.json()
   const list = responseData?.data?.data
 
@@ -112,7 +111,7 @@ export const deleteVideo = async (uid: any, pinCode: any = 107801) => {
     list.map((item: any) => {
       const { vid } = item
       const options = {
-        url: `http://alb-qtjrjlj7p6s63het87.cn-shanghai.alb.aliyuncs.com/vjh/video/del-by-id?vid=${vid}&pinCode=${pinCode}`,
+        url: `${baseUrl}/vjh/video/del-by-id?vid=${vid}&pinCode=${pinCode}`,
         method: 'DELETE',
         headers: {
           Authorization: token,
@@ -125,14 +124,11 @@ export const deleteVideo = async (uid: any, pinCode: any = 107801) => {
 
 export const deleteCases = async (uid: any, pinCode: any = 107801) => {
   const { token } = await fetchUser(uid)
-  const response = await fetch(
-    'http://alb-qtjrjlj7p6s63het87.cn-shanghai.alb.aliyuncs.com/vjk/share-cases/uid/cases',
-    {
-      headers: {
-        Authorization: token,
-      },
+  const response = await fetch(`${baseUrl}/vjk/share-cases/uid/cases`, {
+    headers: {
+      Authorization: token,
     },
-  )
+  })
   const responseData = await response.json()
   const list = responseData?.data?.data
 
@@ -140,7 +136,7 @@ export const deleteCases = async (uid: any, pinCode: any = 107801) => {
     list.map((item: any) => {
       const { id } = item
       const options = {
-        url: `http://alb-qtjrjlj7p6s63het87.cn-shanghai.alb.aliyuncs.com/vjk/share-cases/delete`,
+        url: `${baseUrl}/vjk/share-cases/delete`,
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -158,14 +154,11 @@ export const deleteCases = async (uid: any, pinCode: any = 107801) => {
 
 export const deleteStudio = async (uid: any, pinCode: any = 107801) => {
   const { token } = await fetchUser(uid)
-  const response = await fetch(
-    'http://alb-qtjrjlj7p6s63het87.cn-shanghai.alb.aliyuncs.com/vjk/cases/user/cases',
-    {
-      headers: {
-        Authorization: token,
-      },
+  const response = await fetch(`${baseUrl}/vjk/cases/user/cases`, {
+    headers: {
+      Authorization: token,
     },
-  )
+  })
   const responseData = await response.json()
   const list = responseData?.data?.data
 
@@ -173,7 +166,7 @@ export const deleteStudio = async (uid: any, pinCode: any = 107801) => {
     list.map((item: any) => {
       const { id } = item
       const options = {
-        url: `http://alb-qtjrjlj7p6s63het87.cn-shanghai.alb.aliyuncs.com/vjk/cases/delete`,
+        url: `${baseUrl}/vjk/cases/delete`,
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -190,19 +183,16 @@ export const deleteStudio = async (uid: any, pinCode: any = 107801) => {
 }
 
 export const adminLogin = async () => {
-  const response = await fetch(
-    'http://alb-qtjrjlj7p6s63het87.cn-shanghai.alb.aliyuncs.com/vjg/mgmt/auth/admin-login',
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        username: 'admin',
-        password: 'xxxxxx',
-      }),
+  const response = await fetch(`${baseUrl}/vjg/mgmt/auth/admin-login`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
     },
-  )
+    body: JSON.stringify({
+      username: 'admin',
+      password: 'xxxxxx',
+    }),
+  })
 
   const data = await response.json()
   return data.data

@@ -6,24 +6,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
+<!-- <script type="module" crossorigin src="./dist/main.js"></script>
+<link rel="stylesheet" crossorigin href="./dist/assets/main-DioT4Q51.css"> -->
 
 <body>
-    <form action="">
-        <div>
-            <input type="radio" id="all" name="type" value="all"/>
-            <label for="all">全部</label>
-            <input type="radio" id="foto" name="type" value="foto"/>
-            <label for="foto">图片</label>
-            <input type="radio" id="music" name="type" value="music"/>
-            <label for="music">音乐</label>
-            <input type="radio" id="video" name="type" value="video"/>
-            <label for="video">视频</label>
-            <input type="radio" id="cases" name="type" value="cases"/>
-            <label for="cases">案例</label>
-            <input type="radio" id="studio" name="type" value="studio"/>
-            <label for="studio">原创</label>
-        </div>
-    </form>
+    <button onclick="go()">点击</button>
 </body>
+<script>
+    const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+    const go = async () => {
+        await sleep(1000)
+        window.open('https://www.baidu.com')
+    }
+</script>
 
 </html>

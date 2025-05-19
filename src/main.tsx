@@ -26,7 +26,11 @@ export function QueryProvider({ children }: QueryProviderProps) {
   )
 }
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
+const root = document.createElement('div')
+root.id = 'vj-tool'
+document.body.appendChild(root)
+
+ReactDOM.createRoot(root).render(
   <React.StrictMode>
     <QueryProvider>
       <App />
