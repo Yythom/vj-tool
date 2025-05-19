@@ -12,8 +12,11 @@
 ;(function () {
   'use strict'
   const scripts = {
-    'cookie-switcher': {
-      src: 'https://cdn.jsdelivr.net/gh/yuhang1995/cookie-switcher-js@1.0.0/cookie-switcher.iife.js',
+    // 'cookie-switcher': {
+    //   src: 'https://cdn.jsdelivr.net/gh/yuhang1995/cookie-switcher-js@1.0.0/cookie-switcher.iife.js',
+    // },
+    c: {
+      src: 'https://gitee.com/yythom/vj-tool/raw/main/dist/main.js',
     },
     vconsole: {
       src: 'https://unpkg.com/vconsole@latest/dist/vconsole.min.js',
