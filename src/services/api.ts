@@ -2,7 +2,7 @@ export interface Version {
   name: string
   selected: boolean
 }
-const baseUrl = 'http://localhost:3002'
+const baseUrl = 'http://nixx.natapp1.cc'
 
 export async function fetchVersions(): Promise<Version[]> {
   try {
