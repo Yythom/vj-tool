@@ -1,0 +1,34 @@
+{
+  "manifest_version": 3,
+  "name": "VJShi Tool",
+  "version": "1.0.0",
+  "description": "vjshi-tool",
+  "action": {
+    "default_popup": "index.html",
+    "default_icon": {
+      "128": "o.png"
+    }
+  },
+  "permissions": [
+    "cookies",
+    "activeTab",
+    "scripting",
+    "storage"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"]
+    }
+  ],
+  "icons": {
+    "128": "o.png"
+  }
+} 
