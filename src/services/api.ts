@@ -2,7 +2,11 @@ export interface Version {
   name: string
   selected: boolean
 }
-const baseUrl = 'http://nixx.natapp1.cc'
+const baseUrl = () => {
+  if (window.location.origin.includes('vjshi'))
+    return 'http://alb-qtjrjlj7p6s63het87.cn-shanghai.alb.aliyuncs.com'
+  return 'http://nixx.natapp1.cc'
+}
 
 export async function fetchVersions(): Promise<Version[]> {
   try {
@@ -42,14 +46,14 @@ export async function fetchVersions(): Promise<Version[]> {
 }
 
 export const fetchUser = async (uid: string) => {
-  const response = await fetch(`${baseUrl}/vjg/mgmt/user/login?uid=${uid}`)
+  const response = await fetch(`${baseUrl()}/vjg/mgmt/user/login?uid=${uid}`)
   const data = await response.json()
   return data.data
 }
 
 export const deleteFoto = async (uid: any, pinCode: any = 107801) => {
   const { token } = await fetchUser(uid)
-  const response = await fetch(`${baseUrl}/vjf/foto/list`, {
+  const response = await fetch(`${baseUrl()}/vjf/foto/list`, {
     headers: {
       Authorization: token,
     },
@@ -61,7 +65,7 @@ export const deleteFoto = async (uid: any, pinCode: any = 107801) => {
     list.map((item: any) => {
       const { fid } = item
       const options = {
-        url: `${baseUrl}/vjf/foto/del-by-id?fid=${fid}&pinCode=${pinCode}`,
+        url: `${baseUrl()}/vjf/foto/del-by-id?fid=${fid}&pinCode=${pinCode}`,
         method: 'DELETE',
         headers: {
           Authorization: token,
@@ -74,7 +78,7 @@ export const deleteFoto = async (uid: any, pinCode: any = 107801) => {
 
 export const deleteMusic = async (uid: any, pinCode: any = 107801) => {
   const { token } = await fetchUser(uid)
-  const response = await fetch(`${baseUrl}/vjm/music/seller/list-new`, {
+  const response = await fetch(`${baseUrl()}/vjm/music/seller/list-new`, {
     headers: {
       Authorization: token,
     },
@@ -86,7 +90,7 @@ export const deleteMusic = async (uid: any, pinCode: any = 107801) => {
     list.map((item: any) => {
       const { id } = item
       const options = {
-        url: `${baseUrl}/vjm/music/seller/delete-new?id=${id}&pinCode=${pinCode}`,
+        url: `${baseUrl()}/vjm/music/seller/delete-new?id=${id}&pinCode=${pinCode}`,
         method: 'DELETE',
         headers: {
           Authorization: token,
@@ -99,7 +103,7 @@ export const deleteMusic = async (uid: any, pinCode: any = 107801) => {
 
 export const deleteVideo = async (uid: any, pinCode: any = 107801) => {
   const { token } = await fetchUser(uid)
-  const response = await fetch(`${baseUrl}/vjh/video/list`, {
+  const response = await fetch(`${baseUrl()}/vjh/video/list`, {
     headers: {
       Authorization: token,
     },
@@ -111,7 +115,7 @@ export const deleteVideo = async (uid: any, pinCode: any = 107801) => {
     list.map((item: any) => {
       const { vid } = item
       const options = {
-        url: `${baseUrl}/vjh/video/del-by-id?vid=${vid}&pinCode=${pinCode}`,
+        url: `${baseUrl()}/vjh/video/del-by-id?vid=${vid}&pinCode=${pinCode}`,
         method: 'DELETE',
         headers: {
           Authorization: token,
@@ -124,7 +128,7 @@ export const deleteVideo = async (uid: any, pinCode: any = 107801) => {
 
 export const deleteCases = async (uid: any, pinCode: any = 107801) => {
   const { token } = await fetchUser(uid)
-  const response = await fetch(`${baseUrl}/vjk/share-cases/uid/cases`, {
+  const response = await fetch(`${baseUrl()}/vjk/share-cases/uid/cases`, {
     headers: {
       Authorization: token,
     },
@@ -136,7 +140,7 @@ export const deleteCases = async (uid: any, pinCode: any = 107801) => {
     list.map((item: any) => {
       const { id } = item
       const options = {
-        url: `${baseUrl}/vjk/share-cases/delete`,
+        url: `${baseUrl()}/vjk/share-cases/delete`,
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -154,7 +158,7 @@ export const deleteCases = async (uid: any, pinCode: any = 107801) => {
 
 export const deleteStudio = async (uid: any, pinCode: any = 107801) => {
   const { token } = await fetchUser(uid)
-  const response = await fetch(`${baseUrl}/vjk/cases/user/cases`, {
+  const response = await fetch(`${baseUrl()}/vjk/cases/user/cases`, {
     headers: {
       Authorization: token,
     },
@@ -166,7 +170,7 @@ export const deleteStudio = async (uid: any, pinCode: any = 107801) => {
     list.map((item: any) => {
       const { id } = item
       const options = {
-        url: `${baseUrl}/vjk/cases/delete`,
+        url: `${baseUrl()}/vjk/cases/delete`,
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -183,7 +187,7 @@ export const deleteStudio = async (uid: any, pinCode: any = 107801) => {
 }
 
 export const adminLogin = async () => {
-  const response = await fetch(`${baseUrl}/vjg/mgmt/auth/admin-login`, {
+  const response = await fetch(`${baseUrl()}/vjg/mgmt/auth/admin-login`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
